@@ -2,31 +2,47 @@
 #   Ressourcen
 #
 
+resource "local_file" "cloud_init" {
+  for_each = var.machines
+
+  content  = each.value.userdata
+  filename = "${path.module}/tmp/${each.key}-cloud-init.yaml"
+}
+
+variable "machines" {
+  type = map(object({
+    hostname    = string
+    description = optional(string)
+    userdata    = string
+  }))
+}
+
 resource "null_resource" "multipass" {
+  for_each = var.machines
+
   triggers = {
-    name = var.module
+    name = each.key
   }
 
-  # terraform apply
   provisioner "local-exec" {
-    command = "multipass launch --name ${var.module} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${var.userdata}"
-    on_failure = continue    
-  }
-  provisioner "local-exec" {
-    command = "multipass set client.primary-name=${var.module}"
+    command    = "multipass launch --name ${each.key} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${local_file.cloud_init[each.key].filename}"
     on_failure = continue
   }
 
-  # terraform destroy - ohne wird VM physikalisch nicht geloescht
   provisioner "local-exec" {
-    when    = destroy
-    command = "multipass set client.primary-name=primary"
-
+    command    = "multipass set client.primary-name=${each.key}"
     on_failure = continue
-  }  
+  }
+
   provisioner "local-exec" {
-    when    = destroy
-    command = "multipass delete ${self.triggers.name} --purge"
+    when       = destroy
+    command    = "multipass set client.primary-name=primary"
+    on_failure = continue
+  }
+
+  provisioner "local-exec" {
+    when       = destroy
+    command    = "multipass delete ${each.key} --purge"
     on_failure = continue
   }
 }
