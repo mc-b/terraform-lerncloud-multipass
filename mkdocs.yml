@@ -1,0 +1,4 @@
+site_name: terraform-lerncloud-multipass
+docs_dir: .
+nav:
+- README: README.md
