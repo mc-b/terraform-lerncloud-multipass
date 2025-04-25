@@ -8,6 +8,7 @@ metadata:
   - terraform
   - lerncloud
   - opentofu    
+  - multipass
   links:
   - url: https://github.com/mc-b/terraform-lerncloud-multipass
     title: Repository
@@ -18,7 +19,7 @@ metadata:
     # backstage.io/techdocs-ref: url:https://github.com/mc-b/terraform-lerncloud-multipass
 spec:
   type: infrastructure
-  lifecycle: production
+  lifecycle: experimental
   owner: group:mc-b/mc-b
-  dependsOn:
-    - component:mc-b/lerncloud     
+  subcomponentOf: component:mc-b/terraform-provider-lerncloud
+  
