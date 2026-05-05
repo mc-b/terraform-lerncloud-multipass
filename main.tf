@@ -9,7 +9,7 @@ resource "null_resource" "multipass" {
 
   # terraform apply
   provisioner "local-exec" {
-    command = "multipass launch --name ${var.module} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${var.userdata}"
+    command = "multipass launch --name ${var.module} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${var.userdata} --timeout 1800"
     on_failure = continue    
   }
   provisioner "local-exec" {
