@@ -25,7 +25,7 @@ resource "null_resource" "multipass" {
   }
 
   provisioner "local-exec" {
-    command    = "multipass launch --name ${each.key} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${local_file.cloud_init[each.key].filename}"
+    command    = "multipass launch --name ${each.key} -c${var.cores} -m${var.memory}GB -d${var.storage}GB --cloud-init ${local_file.cloud_init[each.key].filename} --timeout 1800"
     on_failure = continue
   }
 
