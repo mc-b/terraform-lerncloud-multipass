@@ -19,7 +19,7 @@ metadata:
     # backstage.io/techdocs-ref: url:https://github.com/mc-b/terraform-lerncloud-multipass
 spec:
   type: library
-  lifecycle: experimental
+  lifecycle: deprecated
   owner: group:mc-b/mc-b
   dependencyOf: component:mc-b/terraform-provider-lerncloud
   
